@@ -8,17 +8,25 @@ export function login(data) {
   })
 }
 
+export function changePwd(data) {
+  return request({
+    url: '/admin/change_pwd',
+    method: 'post',
+    data
+  })
+}
+
 export function getInfo(token) {
   return request({
-    url: '/admin_info',
-    method: 'get',
-    params: { token }
+    url: '/admin/admin_info',
+    method: 'get'
+    // params: { token }
   })
 }
 
 export function logout() {
   return request({
     url: '/admin_login/logout',
-    method: 'post'
+    method: 'get'
   })
 }
