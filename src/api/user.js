@@ -19,8 +19,8 @@ export function changePwd(data) {
 export function getInfo(token) {
   return request({
     url: '/admin/admin_info',
-    method: 'get'
-    // params: { token }
+    method: 'get',
+    params: { token }
   })
 }
 
