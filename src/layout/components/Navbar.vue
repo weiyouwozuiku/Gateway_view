@@ -24,7 +24,7 @@
         </div>
         <el-dropdown-menu slot="dropdown">
           <el-dropdown-item @click.native="changePwd">
-            <span style="display:block;">Change Password</span>
+            <span style="display:block;">修改密码</span>
           </el-dropdown-item>
           <el-dropdown-item :divided="true" @click.native="logout">
             <span style="display:block;">Log Out</span>
@@ -76,14 +76,14 @@ export default {
   data() {
     return {
       dialogFormVisible: false,
-      tmp: {
+      temp: {
         username: undefined,
         origin_password: undefined,
         password: undefined
       },
       rules: {
-        Origin_Password: [{ required: true, message: 'origin_password is required', trigger: 'blur' }],
-        Password: [{ required: true, message: 'password is required', trigger: 'blur' }]
+        Origin_Password: [{ required: true, message: 'origin_password is required', trigger: 'change' }],
+        Password: [{ required: true, message: 'password is required', trigger: 'change' }]
       }
     }
   },
