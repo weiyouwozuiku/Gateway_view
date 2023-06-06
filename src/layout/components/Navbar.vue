@@ -64,6 +64,7 @@ import Hamburger from '@/components/Hamburger'
 import ErrorLog from '@/components/ErrorLog'
 import Screenfull from '@/components/Screenfull'
 import SizeSelect from '@/components/SizeSelect'
+import { changePwd } from '@/api/user'
 
 export default {
   components: {
@@ -77,7 +78,7 @@ export default {
     return {
       dialogFormVisible: false,
       temp: {
-        username: undefined,
+        username: this.$store.getters.username,
         origin_password: undefined,
         password: undefined
       },
@@ -107,6 +108,11 @@ export default {
     },
     handleChangePwd() {
       console.log('handleChangePwd')
+      this.$refs['dataForm'].validate((valid) => {
+        if (valid) {
+          changePwd(this.temp)
+        }
+      })
     }
   }
 }
