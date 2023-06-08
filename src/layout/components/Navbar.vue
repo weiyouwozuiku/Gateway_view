@@ -107,10 +107,17 @@ export default {
       this.dialogFormVisible = true
     },
     handleChangePwd() {
-      console.log('handleChangePwd')
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
-          changePwd(this.temp)
+          changePwd(this.temp).then(() => {
+            this.dialogFormVisible = false
+            this.$notify({
+              title: 'Success',
+              message: '修改密码成功',
+              type: 'success',
+              duration: 2000
+            })
+          })
         }
       })
     }
