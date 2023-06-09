@@ -1,12 +1,16 @@
 <template>
   <div class="navbar">
-    <hamburger id="hamburger-container" :is-active="sidebar.opened" class="hamburger-container" @toggleClick="toggleSideBar" />
+    <hamburger
+      id="hamburger-container"
+      :is-active="sidebar.opened"
+      class="hamburger-container"
+      @toggleClick="toggleSideBar"
+    />
 
     <breadcrumb id="breadcrumb-container" class="breadcrumb-container" />
 
     <div class="right-menu">
-      <template v-if="device!=='mobile'">
-
+      <template v-if="device !== 'mobile'">
         <error-log class="errLog-container right-menu-item hover-effect" />
 
         <screenfull id="screenfull" class="right-menu-item hover-effect" />
@@ -14,41 +18,51 @@
         <el-tooltip content="Global Size" effect="dark" placement="bottom">
           <size-select id="size-select" class="right-menu-item hover-effect" />
         </el-tooltip>
-
       </template>
 
-      <el-dropdown class="avatar-container right-menu-item hover-effect" trigger="click">
+      <el-dropdown
+        class="avatar-container right-menu-item hover-effect"
+        trigger="click"
+      >
         <div class="avatar-wrapper">
-          <img :src="avatar+'?imageView2/1/w/80/h/80'" class="user-avatar">
+          <img :src="avatar + '?imageView2/1/w/80/h/80'" class="user-avatar">
           <i class="el-icon-caret-bottom" />
         </div>
         <el-dropdown-menu slot="dropdown">
           <el-dropdown-item @click.native="changePwd">
-            <span style="display:block;">修改密码</span>
+            <span style="display: block">修改密码</span>
           </el-dropdown-item>
           <el-dropdown-item :divided="true" @click.native="logout">
-            <span style="display:block;">Log Out</span>
+            <span style="display: block">Log Out</span>
           </el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
     </div>
     <el-dialog title="修改密码" :visible.sync="dialogFormVisible">
-      <el-form ref="dataForm" :rules="rules" :model="temp" label-position="left" label-width="70px" style="width: 400px; margin-left:50px;">
-        <el-form-item label="用户名" prop="Username">
+      <el-form
+        ref="dataForm"
+        :rules="rules"
+        :model="temp"
+        label-position="left"
+        label-width="70px"
+        style="width: 400px; margin-left: 50px"
+      >
+        <el-form-item label="用户名" prop="username">
           <el-input v-model="temp.username" />
         </el-form-item>
-        <el-form-item label="原密码" prop="Origin_Password">
+        <el-form-item label="原密码" prop="origin_password">
           <el-input v-model="temp.origin_password" show-password />
         </el-form-item>
 
-        <el-form-item label="新密码" prop="Password">
+        <el-form-item label="新密码" prop="password">
           <el-input v-model="temp.password" show-password />
+        </el-form-item>
+        <el-form-item label="再次确认密码" prop="repea_password">
+          <el-input v-model="temp.repea_password" show-password />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">
-          Cancel
-        </el-button>
+        <el-button @click="dialogFormVisible = false"> Cancel </el-button>
         <el-button type="primary" @click="handleChangePwd()">
           Confirm
         </el-button>
@@ -78,13 +92,18 @@ export default {
     return {
       dialogFormVisible: false,
       temp: {
-        username: this.$store.getters.username,
+        username: this.$store.getters.name,
         origin_password: undefined,
         password: undefined
       },
       rules: {
-        Origin_Password: [{ required: true, message: 'origin_password is required', trigger: 'change' }],
-        Password: [{ required: true, message: 'password is required', trigger: 'change' }]
+        username: [{ required: true, message: 'origin_password is required', trigger: 'blur' }],
+        origin_password: [{ required: true, message: 'password is required', trigger: 'blur' }],
+        password: [{ required: true, message: 'password is required', trigger: 'blur' }],
+        repea_password: [
+          { required: true, message: 'password is required', trigger: 'blur' },
+          { validtor: this.validInputPwd, trigger: 'blur' }
+        ]
       }
     }
   },
@@ -120,6 +139,13 @@ export default {
           })
         }
       })
+    },
+    validInputPwd(rule, value, callback) {
+      if (value !== this.temp.password) {
+        callback(new Error('两次输入密码不一致'))
+      } else {
+        callback()
+      }
     }
   }
 }
@@ -131,18 +157,18 @@ export default {
   overflow: hidden;
   position: relative;
   background: #fff;
-  box-shadow: 0 1px 4px rgba(0,21,41,.08);
+  box-shadow: 0 1px 4px rgba(0, 21, 41, 0.08);
 
   .hamburger-container {
     line-height: 46px;
     height: 100%;
     float: left;
     cursor: pointer;
-    transition: background .3s;
-    -webkit-tap-highlight-color:transparent;
+    transition: background 0.3s;
+    -webkit-tap-highlight-color: transparent;
 
     &:hover {
-      background: rgba(0, 0, 0, .025)
+      background: rgba(0, 0, 0, 0.025);
     }
   }
 
@@ -174,10 +200,10 @@ export default {
 
       &.hover-effect {
         cursor: pointer;
-        transition: background .3s;
+        transition: background 0.3s;
 
         &:hover {
-          background: rgba(0, 0, 0, .025)
+          background: rgba(0, 0, 0, 0.025);
         }
       }
     }
