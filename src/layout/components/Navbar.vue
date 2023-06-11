@@ -45,20 +45,20 @@
         :model="temp"
         label-position="left"
         label-width="70px"
-        style="width: 400px; margin-left: 50px"
+        style="width: 500px; margin-left: 50px"
       >
-        <el-form-item label="用户名" prop="username">
-          <el-input v-model="temp.username" />
+        <el-form-item label="用户名" prop="username" label-width="120px">
+          <el-input v-model="temp.username" :disabled="true" />
         </el-form-item>
-        <el-form-item label="原密码" prop="origin_password">
+        <el-form-item label="原密码" prop="origin_password" label-width="120px">
           <el-input v-model="temp.origin_password" show-password />
         </el-form-item>
 
-        <el-form-item label="新密码" prop="password">
-          <el-input v-model="temp.password" show-password />
+        <el-form-item label="新密码" prop="password" label-width="120px">
+          <el-input v-model="temp.password" placeholder="请输入密码" show-password />
         </el-form-item>
-        <el-form-item label="再次确认密码" prop="repea_password">
-          <el-input v-model="temp.repea_password" show-password />
+        <el-form-item label="再次确认密码" prop="repeat_password" label-width="120px">
+          <el-input v-model="temp.repeat_password" placeholder="请再次输入密码" show-password />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -89,20 +89,43 @@ export default {
     SizeSelect
   },
   data() {
+    const validatePassword = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error('请输入密码'))
+      } else {
+        if (this.temp.repeat_password !== '') {
+          this.$refs.dataForm.validateField('repeat_password')
+        }
+        callback()
+      }
+    }
+    const validatePassword2 = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error('请再次输入密码'))
+      } else if (value !== this.temp.password) {
+        callback(new Error('两次输入密码不一致!'))
+      } else {
+        callback()
+      }
+    }
     return {
       dialogFormVisible: false,
       temp: {
         username: this.$store.getters.name,
         origin_password: undefined,
-        password: undefined
+        password: undefined,
+        repeat_password: undefined
       },
       rules: {
-        username: [{ required: true, message: 'origin_password is required', trigger: 'blur' }],
-        origin_password: [{ required: true, message: 'password is required', trigger: 'blur' }],
-        password: [{ required: true, message: 'password is required', trigger: 'blur' }],
-        repea_password: [
+        username: [{ required: true, message: 'username is required', trigger: 'blur' }],
+        origin_password: [{ required: true, message: 'origin_password is required', trigger: 'blur' }],
+        password: [
           { required: true, message: 'password is required', trigger: 'blur' },
-          { validtor: this.validInputPwd, trigger: 'blur' }
+          { validator: validatePassword, trigger: 'blur' }
+        ],
+        repeat_password: [
+          { required: true, message: 'repeat_password is required', trigger: 'blur' },
+          { validator: validatePassword2, trigger: 'blur' }
         ]
       }
     }
@@ -128,24 +151,17 @@ export default {
     handleChangePwd() {
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
-          changePwd(this.temp).then(() => {
+          changePwd({ origin_password: this.temp.origin_password, password: this.temp.password }).then(response => {
             this.dialogFormVisible = false
             this.$notify({
               title: 'Success',
-              message: '修改密码成功',
+              message: response.data,
               type: 'success',
               duration: 2000
             })
           })
         }
       })
-    },
-    validInputPwd(rule, value, callback) {
-      if (value !== this.temp.password) {
-        callback(new Error('两次输入密码不一致'))
-      } else {
-        callback()
-      }
     }
   }
 }
