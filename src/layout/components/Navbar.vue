@@ -93,6 +93,9 @@ export default {
       if (value === '') {
         callback(new Error('请输入密码'))
       } else {
+        if (value.length < 6) {
+          callback(new Error('密码长度不能小于6位'))
+        }
         if (this.temp.repeat_password !== '') {
           this.$refs.dataForm.validateField('repeat_password')
         }
